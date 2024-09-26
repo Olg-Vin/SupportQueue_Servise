@@ -1,0 +1,48 @@
+package org.vinio.DataInit;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.vinio.entities.MessageEntity;
+import org.vinio.entities.ReplyEntity;
+import org.vinio.entities.UserEntity;
+import org.vinio.repositories.MessageRepository;
+import org.vinio.repositories.ReplyRepository;
+import org.vinio.repositories.UserRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Component
+public class DataInit implements CommandLineRunner {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
+
+    @Override
+    public void run(String... args) throws Exception {
+        // Создаем тестовых пользователей
+        UserEntity user1 = new UserEntity(null, "John Doe", "john.doe@example.com", null);
+        UserEntity user2 = new UserEntity(null, "Jane Smith", "jane.smith@example.com", null);
+
+        userRepository.saveAll(List.of(user1, user2));
+
+        // Создаем тестовые сообщения для пользователей
+        MessageEntity message1 = new MessageEntity(null, user1, "Technical Issue", "Can't log in", "I'm having trouble logging in to my account.", LocalDateTime.now(), "New", null);
+        MessageEntity message2 = new MessageEntity(null, user2, "Suggestion", "Add new feature", "I suggest adding a dark mode feature.", LocalDateTime.now(), "New", null);
+
+        messageRepository.saveAll(List.of(message1, message2));
+
+        // Создаем тестовые ответы на сообщения
+        ReplyEntity reply1 = new ReplyEntity(null, message1, "Please try resetting your password.", LocalDateTime.now());
+        ReplyEntity reply2 = new ReplyEntity(null, message2, "Thank you for your suggestion! We'll consider it.", LocalDateTime.now());
+
+        replyRepository.saveAll(List.of(reply1, reply2));
+    }
+}
