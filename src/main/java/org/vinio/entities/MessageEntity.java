@@ -1,11 +1,11 @@
 package org.vinio.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -34,13 +34,13 @@ public class MessageEntity {
     private String body;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @Column(name = "status", nullable = false)
     private String status; // Можно заменить на Enum
 
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReplyEntity> replies;
+    @OneToOne(mappedBy = "message", cascade = CascadeType.ALL)
+    private ReplyEntity replies;
 }
 
 
