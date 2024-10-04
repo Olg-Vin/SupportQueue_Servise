@@ -3,15 +3,13 @@ package org.vinio.controllers.v1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.vinio.DTOs.Mappers.UserMapper;
 import org.vinio.DTOs.UserDTO;
 import org.vinio.ExceptionsHandler.ResourceNotFoundException;
-import org.vinio.Models.UserModel;
-import org.vinio.Models.UserModelAssembler;
 import org.vinio.Services.UserService;
 import org.vinio.controllers.responseDTO.UserResponseDTO;
 import org.vinio.entities.UserEntity;
@@ -19,7 +17,8 @@ import org.vinio.repositories.UserRepository;
 
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users")
@@ -31,7 +30,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private UserModelAssembler userModelAssembler;
+    private UserMapper userMapper;
 
     @GetMapping("/{id}")
     public EntityModel<UserResponseDTO> getUserById(@PathVariable("id") Long id) {
@@ -45,17 +44,10 @@ public class UserController {
         Link deleteLink = linkTo(methodOn(controllerClass).deleteUser(id)).withRel("delete");
         Link messageLink = linkTo(methodOn(MessageController.class).getMessagesByUserId(id)).withRel("messages");
 
-        UserDTO userDTO = userService.convertToDto(user);
+        UserDTO userDTO = userMapper.convertToDto(user);
         UserResponseDTO userResponseDTO = new UserResponseDTO(userDTO, List.of(updateLink, deleteLink));
 
         return EntityModel.of(userResponseDTO, selfLink, messageLink);
-    }
-
-    @GetMapping("/test")
-    public UserModel testAffordance() {
-
-        UserEntity user = new UserEntity(1L, "John Doe", "john.doe@example.com", null);
-        return userModelAssembler.toModel(userService.convertToDto(user));
     }
 
     @PostMapping

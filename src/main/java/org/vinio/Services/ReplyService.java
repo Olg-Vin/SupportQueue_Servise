@@ -1,27 +1,35 @@
 package org.vinio.Services;
 
-import org.modelmapper.ModelMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.vinio.DTOs.MessageDTO;
+import org.vinio.DTOs.Mappers.ReplyMapper;
 import org.vinio.DTOs.ReplyDTO;
-import org.vinio.entities.MessageEntity;
-import org.vinio.entities.ReplyEntity;
+import org.vinio.repositories.ReplyRepository;
 
 @Service
+@Log4j2
 public class ReplyService {
+    private final ReplyRepository replyRepository;
+    private final ReplyMapper replyMapper;
     @Autowired
-    private ModelMapper modelMapper;
-
-    public ReplyDTO convertToDto(ReplyEntity replyEntity) {
-        ReplyDTO replyDTO = modelMapper.map(replyEntity, ReplyDTO.class);
-        // Явно установить userId, чтобы избежать рекурсивной загрузки UserEntity
-        replyDTO.setMessage(replyEntity.getMessage().getMessageId());
-        return replyDTO;
+    public ReplyService(ReplyRepository replyRepository, ReplyMapper replyMapper) {
+        this.replyRepository = replyRepository;
+        this.replyMapper = replyMapper;
     }
 
-    public ReplyEntity convertToEntity(ReplyDTO replyDTO) {
-        return modelMapper.map(replyDTO, ReplyEntity.class);
+    public void saveReply(ReplyDTO replyDTO) {
+        log.info("Save reply");
+        replyRepository.save(replyMapper.convertToEntity(replyDTO));
     }
 
+    public ReplyDTO getReply(Long id) {
+        return replyMapper.convertToDto(replyRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Reply with id " + id + " not found");
+                    return new RuntimeException("Reply with id " + id + " not found");
+                }));
+    }
+
+//    TODO надо будет менять поле status. Удалять и полностью обновлять не требуется
 }

@@ -28,8 +28,8 @@ public class DataInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Создаем тестовых пользователей
-        UserEntity user1 = new UserEntity(null, "John Doe", "john.doe@example.com", null);
-        UserEntity user2 = new UserEntity(null, "Jane Smith", "jane.smith@example.com", null);
+        UserEntity user1 = new UserEntity(null, "John Doe", null);
+        UserEntity user2 = new UserEntity(null, "Jane Smith", null);
 
         userRepository.saveAll(List.of(user1, user2));
 
@@ -42,8 +42,8 @@ public class DataInit implements CommandLineRunner {
         messageRepository.saveAll(List.of(message1, message2));
 
         // Создаем тестовые ответы на сообщения
-        ReplyEntity reply1 = new ReplyEntity(null, message1, "Please try resetting your password.", date);
-        ReplyEntity reply2 = new ReplyEntity(null, message2, "Thank you for your suggestion! We'll consider it.", date);
+        ReplyEntity reply1 = new ReplyEntity(null, message1, "Please try resetting your password.", date, "");
+        ReplyEntity reply2 = new ReplyEntity(null, message2, "Thank you for your suggestion! We'll consider it.", date, "");
 
         replyRepository.saveAll(List.of(reply1, reply2));
     }

@@ -27,5 +27,8 @@ public class ReplyEntity {
 
     @Column(name = "sent_at", nullable = false)
     private Date sentAt;
+
+    @Column(name = "status", nullable = false)
+    private String status;
 }
 

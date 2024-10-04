@@ -1,30 +1,37 @@
 package org.vinio.Services;
 
-import org.modelmapper.ModelMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.vinio.DTOs.Mappers.MessageMapper;
 import org.vinio.DTOs.MessageDTO;
-import org.vinio.entities.MessageEntity;
 import org.vinio.repositories.MessageRepository;
 
-import java.util.List;
-
 @Service
+@Log4j2
 public class MessageService {
+    private final MessageRepository messageRepository;
+    private final MessageMapper messageMapper;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    public MessageDTO convertToDto(MessageEntity messageEntity) {
-        MessageDTO messageDTO = modelMapper.map(messageEntity, MessageDTO.class);
-        // Явно установить userId, чтобы избежать рекурсивной загрузки UserEntity
-        messageDTO.setUser(messageEntity.getUser().getUserId());
-        return messageDTO;
+    public MessageService(MessageRepository messageRepository, MessageMapper messageMapper) {
+        this.messageRepository = messageRepository;
+        this.messageMapper = messageMapper;
     }
 
-    public MessageEntity convertToEntity(MessageDTO messageDTO) {
-        return modelMapper.map(messageDTO, MessageEntity.class);
+    public void saveMessage(MessageDTO messageDTO) {
+        log.info("Save new message");
+        messageRepository.save(messageMapper.convertToEntity(messageDTO));
     }
 
+    public MessageDTO getMessage(Long id) {
+        log.info("Get message with id: " + id);
+        return messageMapper.convertToDto(messageRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Message with id " + id + " not found");
+                    return new RuntimeException("Message with id " + id + " not found");
+                }));
+    }
 
+//    TODO изменение некоторых полей сообщения. Удалять и обновлять целиком не требуется
 }

@@ -7,6 +7,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.vinio.DTOs.Mappers.ReplyMapper;
 import org.vinio.DTOs.ReplyDTO;
 import org.vinio.ExceptionsHandler.ResourceNotFoundException;
 import org.vinio.Services.ReplyService;
@@ -28,6 +29,8 @@ public class ReplyController {
     private ReplyRepository replyRepository;
     @Autowired
     private ReplyService replyService;
+    @Autowired
+    private ReplyMapper replyMapper;
 
     @GetMapping("/message/{id}")
     public EntityModel<ReplyResponseDTO> getReplyByMessageId(@PathVariable("id") Long id) {
@@ -39,7 +42,7 @@ public class ReplyController {
         Link updateLink = linkTo(methodOn(controllerClass).updateReply(reply.getReplyId(), null)).withRel("update");
         Link deleteLink = linkTo(methodOn(controllerClass).deleteReply(reply.getReplyId())).withRel("delete");
 
-        ReplyDTO replyDTO = replyService.convertToDto(reply);
+        ReplyDTO replyDTO = replyMapper.convertToDto(reply);
         ReplyResponseDTO replyResponseDTO = new ReplyResponseDTO(replyDTO, List.of(updateLink, deleteLink));
 
         return EntityModel.of(replyResponseDTO, selfLink);

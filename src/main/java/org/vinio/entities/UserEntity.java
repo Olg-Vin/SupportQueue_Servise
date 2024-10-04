@@ -22,9 +22,6 @@ public class UserEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "contact_info", nullable = false)
-    private String contactInfo; // Email или телефон
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MessageEntity> messages;
 

@@ -6,6 +6,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.vinio.DTOs.Mappers.MessageMapper;
 import org.vinio.DTOs.MessageDTO;
 import org.vinio.ExceptionsHandler.ResourceNotFoundException;
 import org.vinio.Services.MessageService;
@@ -26,6 +27,8 @@ public class MessageController {
     private MessageRepository messageRepository;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private MessageMapper messageMapper;
 
     @PostMapping
     public MessageEntity createMessage(@RequestBody MessageEntity message) {
@@ -39,7 +42,7 @@ public class MessageController {
 
         List<EntityModel<MessageDTO>> messageDtos = messages.stream()
                 .map(messageEntity -> {
-                    MessageDTO messageDto = messageService.convertToDto(messageEntity);
+                    MessageDTO messageDto = messageMapper.convertToDto(messageEntity);
                     Link selfLink = linkTo(methodOn(MessageController.class).getMessagesByUserId(messageDto.getMessageId())).withSelfRel();
                     Link deleteLink = linkTo(methodOn(MessageController.class).deleteMessage(messageDto.getMessageId())).withRel("delete");
                     Link updateLink = linkTo(methodOn(MessageController.class).updateMessage(messageDto.getMessageId(), null)).withRel("update");
