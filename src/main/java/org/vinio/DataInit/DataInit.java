@@ -10,7 +10,7 @@ import org.vinio.repositories.MessageRepository;
 import org.vinio.repositories.ReplyRepository;
 import org.vinio.repositories.UserRepository;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -28,20 +28,22 @@ public class DataInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Создаем тестовых пользователей
-        UserEntity user1 = new UserEntity(null, "John Doe", "john.doe@example.com", null);
-        UserEntity user2 = new UserEntity(null, "Jane Smith", "jane.smith@example.com", null);
+        UserEntity user1 = new UserEntity(null, "John Doe", null);
+        UserEntity user2 = new UserEntity(null, "Jane Smith", null);
 
         userRepository.saveAll(List.of(user1, user2));
 
+        Date date = new Date();
+
         // Создаем тестовые сообщения для пользователей
-        MessageEntity message1 = new MessageEntity(null, user1, "Technical Issue", "Can't log in", "I'm having trouble logging in to my account.", LocalDateTime.now(), "New", null);
-        MessageEntity message2 = new MessageEntity(null, user2, "Suggestion", "Add new feature", "I suggest adding a dark mode feature.", LocalDateTime.now(), "New", null);
+        MessageEntity message1 = new MessageEntity(null, user1, "Technical Issue", "Can't log in", "I'm having trouble logging in to my account.", date, "New", null);
+        MessageEntity message2 = new MessageEntity(null, user2, "Suggestion", "Add new feature", "I suggest adding a dark mode feature.", date, "New", null);
 
         messageRepository.saveAll(List.of(message1, message2));
 
         // Создаем тестовые ответы на сообщения
-        ReplyEntity reply1 = new ReplyEntity(null, message1, "Please try resetting your password.", LocalDateTime.now());
-        ReplyEntity reply2 = new ReplyEntity(null, message2, "Thank you for your suggestion! We'll consider it.", LocalDateTime.now());
+        ReplyEntity reply1 = new ReplyEntity(null, message1, "Please try resetting your password.", date, "");
+        ReplyEntity reply2 = new ReplyEntity(null, message2, "Thank you for your suggestion! We'll consider it.", date, "");
 
         replyRepository.saveAll(List.of(reply1, reply2));
     }

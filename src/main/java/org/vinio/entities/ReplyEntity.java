@@ -1,17 +1,17 @@
 package org.vinio.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "replies")
+@Table(name = "reply")
 public class ReplyEntity {
 
     @Id
@@ -19,14 +19,17 @@ public class ReplyEntity {
     @Column(name = "reply_id")
     private Long replyId;
 
-    @ManyToOne
-    @JoinColumn(name = "message_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "message_id")
     private MessageEntity message;
 
     @Column(name = "body", columnDefinition = "TEXT", nullable = false)
     private String body;
 
     @Column(name = "sent_at", nullable = false)
-    private LocalDateTime sentAt;
+    private Date sentAt;
+
+    @Column(name = "status", nullable = false)
+    private String status;
 }
 
