@@ -19,6 +19,20 @@
 
 
     <dependencies>
+        <!-- Spring Boot GraphQL support -->
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>graphql-spring-boot-starter</artifactId>
+            <version>15.1.0</version> <!-- Убедись, что версия актуальна -->
+        </dependency>
+
+        <!-- GraphQL Java Tools для работы с GraphQL схемами -->
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>graphql-java-tools</artifactId>
+            <version>14.0.0</version>
+        </dependency>
+
         <!-- Web dep. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
