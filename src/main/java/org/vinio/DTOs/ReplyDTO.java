@@ -16,4 +16,5 @@ public class ReplyDTO {
     private Long message;
     private String body;
     private Date sentAt;
+    private String status;
 }

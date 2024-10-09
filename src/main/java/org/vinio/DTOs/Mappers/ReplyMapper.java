@@ -28,3 +28,40 @@ public class ReplyMapper {
         return modelMapper.map(replyDTO, ReplyEntity.class);
     }
 }
+
+/*
+* @Component
+public class ReplyMapper {
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    // Преобразование ReplyEntity в ReplyDTO
+    public ReplyDTO convertToDto(ReplyEntity replyEntity) {
+        ReplyDTO replyDTO = new ReplyDTO();
+        replyDTO.setReplyId(replyEntity.getReplyId());
+        replyDTO.setMessage(replyEntity.getMessage().getMessageId());  // Извлекаем ID сообщения
+        replyDTO.setBody(replyEntity.getBody());
+        replyDTO.setSentAt(replyEntity.getSentAt());
+        replyDTO.setStatus(replyEntity.getStatus());  // Добавляем статус
+
+        return replyDTO;
+    }
+
+    // Преобразование ReplyDTO в ReplyEntity
+    public ReplyEntity convertToEntity(ReplyDTO replyDTO) {
+        ReplyEntity replyEntity = new ReplyEntity();
+
+        // Находим MessageEntity по ID
+        MessageEntity messageEntity = messageRepository.findById(replyDTO.getMessage())
+                .orElseThrow(() -> new RuntimeException("Message with id " + replyDTO.getMessage() + " not found"));
+
+        replyEntity.setMessage(messageEntity);  // Устанавливаем связь с MessageEntity
+        replyEntity.setBody(replyDTO.getBody());
+        replyEntity.setSentAt(replyDTO.getSentAt());
+        replyEntity.setStatus(replyDTO.getStatus());  // Устанавливаем статус
+
+        return replyEntity;
+    }
+}
+*/

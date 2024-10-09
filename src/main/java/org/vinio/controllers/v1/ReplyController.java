@@ -43,9 +43,23 @@ public class ReplyController {
         Link deleteLink = linkTo(methodOn(controllerClass).deleteReply(reply.getReplyId())).withRel("delete");
 
         ReplyDTO replyDTO = replyMapper.convertToDto(reply);
-        ReplyResponseDTO replyResponseDTO = new ReplyResponseDTO(replyDTO, List.of(updateLink, deleteLink));
+//        ReplyResponseDTO replyResponseDTO = new ReplyResponseDTO(replyDTO, List.of(updateLink, deleteLink));
 
-        return EntityModel.of(replyResponseDTO, selfLink);
+//        return EntityModel.of(replyResponseDTO, selfLink);
+        return null;
+    }
+    private List<Link> createLinks (Long id) {
+        Class<UserController> controllerClass = UserController.class;
+
+        Link selfLink = linkTo(methodOn(controllerClass).getUserById(id)).withSelfRel();
+        Link updateLink = linkTo(methodOn(controllerClass).updateUser(id, null)).withRel("update");
+        Link deleteLink = linkTo(methodOn(controllerClass).deleteUser(id)).withRel("delete");
+
+        return List.of(selfLink, updateLink, deleteLink);
+    }
+    private List<Link> createActions (Long id) {
+        Link messageLink = linkTo(methodOn(MessageController.class).getMessagesByUserId(id)).withRel("messages");
+        return List.of(messageLink);
     }
 
     @PostMapping
