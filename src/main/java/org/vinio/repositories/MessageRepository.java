@@ -6,4 +6,5 @@ import org.vinio.entities.MessageEntity;
 
 @Repository
 public interface MessageRepository extends JpaRepository<MessageEntity, Long> {
+    MessageEntity findByReply_ReplyId(Long replyId);
 }

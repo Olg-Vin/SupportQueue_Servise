@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vinio.DTOs.Mappers.MessageMapper;
 import org.vinio.DTOs.MessageDTO;
+import org.vinio.entities.MessageEntity;
 import org.vinio.repositories.MessageRepository;
 
 @Service
@@ -19,9 +20,10 @@ public class MessageService {
         this.messageMapper = messageMapper;
     }
 
-    public void saveMessage(MessageDTO messageDTO) {
+    public MessageDTO saveMessage(MessageDTO messageDTO) {
         log.info("Save new message");
-        messageRepository.save(messageMapper.convertToEntity(messageDTO));
+        MessageEntity message = messageRepository.save(messageMapper.convertToEntity(messageDTO));
+        return messageMapper.convertToDto(message);
     }
 
     public MessageDTO getMessage(Long id) {
@@ -33,5 +35,35 @@ public class MessageService {
                 }));
     }
 
-//    TODO изменение некоторых полей сообщения. Удалять и обновлять целиком не требуется
+    public MessageDTO updateMessage(Long id, MessageDTO messageDTO) {
+        log.info("[service] Update message with id " + id);
+        MessageEntity existingMessage = messageRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Message with id " + id + " not found");
+                    return new RuntimeException("Message with id " + id + " not found");
+                });
+        existingMessage.setBody(messageDTO.getBody());
+        existingMessage.setCategory(messageDTO.getCategory());
+        existingMessage.setSubject(messageDTO.getSubject());
+        existingMessage.setStatus(messageDTO.getStatus());
+        MessageEntity updatedMessage = messageRepository.save(existingMessage);
+        return messageMapper.convertToDto(updatedMessage);
+    }
+
+    public void deleteMessage(Long id) {
+        log.info("[service] Delete message with id " + id);
+        MessageEntity existingMessage = messageRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Message with id " + id + " not found");
+                    return new RuntimeException("Message with id " + id + " not found");
+                });
+        messageRepository.delete(existingMessage);
+        log.info("Message with id " + id + " successfully deleted");
+    }
+
+    public MessageDTO getMessageByReplyId(Long replyId) {
+        MessageEntity message = messageRepository.findByReply_ReplyId(replyId);
+        log.info("[service] get message for reply with id " + replyId);
+        return messageMapper.convertToDto(message);
+    }
 }

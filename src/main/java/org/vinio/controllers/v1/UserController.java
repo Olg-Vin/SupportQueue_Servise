@@ -32,10 +32,10 @@ public class UserController {
     private UserMapper userMapper;
 
     @GetMapping("/{id}")
-    public EntityModel<UserResponseDTO> getUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<EntityModel<UserResponseDTO>> getUserById(@PathVariable("id") Long id) {
         UserDTO user = userService.getUser(id);
         UserResponseDTO userResponseDTO = new UserResponseDTO(user, createActions(id), createLinks(id));
-        return EntityModel.of(userResponseDTO);
+        return new ResponseEntity<>(EntityModel.of(userResponseDTO), HttpStatus.OK);
     }
 
 //    TODO можно стандартизировать и вынести в отдельный класс
@@ -59,17 +59,17 @@ public class UserController {
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        log.info("[endpoint] удаление пользователя");
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") Long id, @RequestBody UserDTO updatedUserDTO) {
-        log.info("[endpoint] обновление пользователя");
+        log.info("[endpoint] обновление пользователя с id " + id);
         UserDTO updatedUser = userService.updateUser(id, updatedUserDTO);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+        log.info("[endpoint] удаление пользователя с id " + id);
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

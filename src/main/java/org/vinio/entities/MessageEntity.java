@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,7 +39,7 @@ public class MessageEntity {
     private String status; // Можно заменить на Enum
 
     @OneToOne(mappedBy = "message", cascade = CascadeType.ALL)
-    private ReplyEntity replies;
+    private ReplyEntity reply;
 }
 
 

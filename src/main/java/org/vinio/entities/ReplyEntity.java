@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "replies")
+@Table(name = "reply")
 public class ReplyEntity {
 
     @Id
@@ -20,6 +20,7 @@ public class ReplyEntity {
     private Long replyId;
 
     @OneToOne
+    @JoinColumn(name = "message_id")
     private MessageEntity message;
 
     @Column(name = "body", columnDefinition = "TEXT", nullable = false)
