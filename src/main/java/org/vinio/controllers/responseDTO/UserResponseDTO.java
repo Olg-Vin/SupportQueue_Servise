@@ -10,13 +10,13 @@ public class UserResponseDTO {
     @JsonProperty("user")
     private UserDTO user;
     @JsonProperty("actions")
-    private List<Link> actions;  // Поле "_actions"
+    private List<Link> actions;
+    @JsonProperty("links")
+    private List<Link> links;
 
-    public UserResponseDTO(UserDTO user, List<Link> actions) {
+    public UserResponseDTO(UserDTO user, List<Link> actions, List<Link> links) {
         this.user = user;
         this.actions = actions;
+        this.links = links;
     }
-
-
-
 }

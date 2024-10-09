@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vinio.DTOs.Mappers.UserMapper;
 import org.vinio.DTOs.UserDTO;
+import org.vinio.entities.UserEntity;
 import org.vinio.repositories.UserRepository;
 
 @Service
@@ -18,9 +19,10 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public void saveUser(UserDTO userDTO) {
-        log.info("Save user");
-        userRepository.save(userMapper.convertToEntity(userDTO));
+    public UserDTO saveUser(UserDTO userDTO) {
+        UserEntity user = userRepository.save(userMapper.convertToEntity(userDTO));
+        log.info("[service] Save user with id " + user.getUserId());
+        return userMapper.convertToDto(user);
     }
 
     public UserDTO getUser(Long id) {
@@ -31,5 +33,26 @@ public class UserService {
                 }));
     }
 
-//    TODO Удалять и полностью обновлять не требуется
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
+        log.info("[service] Update user with id " + id);
+        UserEntity existingUser = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("User with id " + id + " not found");
+                    return new RuntimeException("User with id " + id + " not found");
+                });
+        existingUser.setName(userDTO.getName());
+        UserEntity updatedUser = userRepository.save(existingUser);
+        return userMapper.convertToDto(updatedUser);
+    }
+
+    public void deleteUser(Long id) {
+        log.info("[service] Delete user with id " + id);
+        UserEntity existingUser = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("User with id " + id + " not found");
+                    return new RuntimeException("User with id " + id + " not found");
+                });
+        userRepository.delete(existingUser);
+        log.info("User with id " + id + " successfully deleted");
+    }
 }

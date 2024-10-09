@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-
     private Long userId;
     private String name;
-    private String contactInfo;
-//    private List<MessageDTO> messages;
 }

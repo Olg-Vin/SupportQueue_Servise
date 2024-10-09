@@ -1,5 +1,6 @@
 package org.vinio.controllers.v1;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -9,10 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.vinio.DTOs.Mappers.UserMapper;
 import org.vinio.DTOs.UserDTO;
-import org.vinio.ExceptionsHandler.ResourceNotFoundException;
 import org.vinio.Services.UserService;
 import org.vinio.controllers.responseDTO.UserResponseDTO;
-import org.vinio.entities.UserEntity;
 import org.vinio.repositories.UserRepository;
 
 import java.util.List;
@@ -20,11 +19,11 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Log4j2
 @RestController
 @RequestMapping("/users")
 @EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 public class UserController {
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -34,38 +33,43 @@ public class UserController {
 
     @GetMapping("/{id}")
     public EntityModel<UserResponseDTO> getUserById(@PathVariable("id") Long id) {
-        UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        UserDTO user = userService.getUser(id);
+        UserResponseDTO userResponseDTO = new UserResponseDTO(user, createActions(id), createLinks(id));
+        return EntityModel.of(userResponseDTO);
+    }
 
+//    TODO можно стандартизировать и вынести в отдельный класс
+    private List<Link> createLinks (Long id) {
         Class<UserController> controllerClass = UserController.class;
 
         Link selfLink = linkTo(methodOn(controllerClass).getUserById(id)).withSelfRel();
         Link updateLink = linkTo(methodOn(controllerClass).updateUser(id, null)).withRel("update");
         Link deleteLink = linkTo(methodOn(controllerClass).deleteUser(id)).withRel("delete");
+
+        return List.of(selfLink, updateLink, deleteLink);
+    }
+    private List<Link> createActions (Long id) {
         Link messageLink = linkTo(methodOn(MessageController.class).getMessagesByUserId(id)).withRel("messages");
-
-        UserDTO userDTO = userMapper.convertToDto(user);
-        UserResponseDTO userResponseDTO = new UserResponseDTO(userDTO, List.of(updateLink, deleteLink));
-
-        return EntityModel.of(userResponseDTO, selfLink, messageLink);
+        return List.of(messageLink);
     }
 
-    @PostMapping
-    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
-        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+    @PostMapping("/createUser")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+        log.info("[endpoint] создание нового пользователя");
+        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        userRepository.deleteById(id);
+        log.info("[endpoint] удаление пользователя");
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody UserEntity updatedUser) {
-        UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        updatedUser.setUserId(user.getUserId());
-        return new ResponseEntity<>(userRepository.save(updatedUser), HttpStatus.OK);
+    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") Long id, @RequestBody UserDTO updatedUserDTO) {
+        log.info("[endpoint] обновление пользователя");
+        UserDTO updatedUser = userService.updateUser(id, updatedUserDTO);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }
