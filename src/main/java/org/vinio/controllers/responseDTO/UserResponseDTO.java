@@ -19,4 +19,8 @@ public class UserResponseDTO {
         this.actions = actions;
         this.links = links;
     }
+
+    public UserResponseDTO(UserDTO user) {
+        this.user = user;
+    }
 }

@@ -8,6 +8,8 @@ import org.vinio.DTOs.MessageDTO;
 import org.vinio.entities.MessageEntity;
 import org.vinio.repositories.MessageRepository;
 
+import java.util.List;
+
 @Service
 @Log4j2
 public class MessageService {
@@ -65,5 +67,10 @@ public class MessageService {
         MessageEntity message = messageRepository.findByReply_ReplyId(replyId);
         log.info("[service] get message for reply with id " + replyId);
         return messageMapper.convertToDto(message);
+    }
+    public List<MessageDTO> getMessageByUserId(Long replyId) {
+        List<MessageEntity> messages = messageRepository.findByUser_UserId(replyId);
+        log.info("[service] get message for reply with id " + replyId);
+        return messages.stream().map(messageMapper::convertToDto).toList();
     }
 }

@@ -19,4 +19,8 @@ public class ReplyResponseDTO {
         this.actions = actions;
         this.links = links;
     }
+
+    public ReplyResponseDTO(ReplyDTO reply) {
+        this.reply = reply;
+    }
 }
