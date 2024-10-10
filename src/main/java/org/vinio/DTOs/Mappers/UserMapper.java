@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 import org.vinio.DTOs.UserDTO;
-import org.vinio.controllers.responseDTO.UserQLDto;
+import org.vinio.controllers.responseDTO.UserResponseDTO;
 import org.vinio.entities.UserEntity;
 
 import java.util.List;
@@ -24,24 +24,19 @@ public class UserMapper {
     public UserDTO convertToDto(UserEntity userEntity) {
         return modelMapper.map(userEntity, UserDTO.class);
     }
-
+    // TODO в dto лежат лишь id на сущность, надо явно её привязать
     public UserEntity convertToEntity(UserDTO userDTO) {
         return modelMapper.map(userDTO, UserEntity.class);
     }
 
-    // Преобразование UserDTO в UserQLDto с добавлением действий и ссылок
-    public UserQLDto convertToQLDto(UserDTO userDTO, List<Link> actions, List<Link> links) {
-        UserQLDto userQLDto = modelMapper.map(userDTO, UserQLDto.class);
-        userQLDto.setActions(actions);  // Добавляем действия
-        userQLDto.setLinks(links);      // Добавляем ссылки
-        return userQLDto;
-    }
-    public UserQLDto convertToQLDto(UserDTO userDTO) {
-        return modelMapper.map(userDTO, UserQLDto.class);
+    public UserResponseDTO convertToResponse(UserDTO userDTO, List<Link> actions, List<Link> links) {
+        UserResponseDTO userResponseDTO = modelMapper.map(userDTO, UserResponseDTO.class);
+        userResponseDTO.setActions(actions);  // Добавляем действия
+        userResponseDTO.setLinks(links);      // Добавляем ссылки
+        return userResponseDTO;
     }
 
-    // Преобразование UserQLDto в UserDTO (если потребуется)
-    public UserDTO convertToDto(UserQLDto userQLDto) {
-        return modelMapper.map(userQLDto, UserDTO.class);
+    public UserResponseDTO convertToResponse(UserDTO userDTO) {
+        return modelMapper.map(userDTO, UserResponseDTO.class);
     }
 }

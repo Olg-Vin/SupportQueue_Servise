@@ -24,17 +24,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/users")
 @EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 public class UserController {
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private UserService userService;
-    @Autowired
     private UserMapper userMapper;
+    @Autowired
+    public UserController(UserRepository userRepository, UserService userService, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<UserResponseDTO>> getUserById(@PathVariable("id") Long id) {
         UserDTO user = userService.getUser(id);
-        UserResponseDTO userResponseDTO = new UserResponseDTO(user, createActions(id), createLinks(id));
+        UserResponseDTO userResponseDTO = userMapper.convertToResponse(user, createActions(id), createLinks(id));
         return new ResponseEntity<>(EntityModel.of(userResponseDTO), HttpStatus.OK);
     }
 
