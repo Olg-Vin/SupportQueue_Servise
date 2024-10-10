@@ -29,23 +29,35 @@ type Link {
   href: String
 }
 
-type Query {
-  getUser(id: ID): User
-  getMessage(id: ID): Message
-  getMessageByReplyId(id: ID): Message
-  getMessagesByUserId(id: ID): Message
-  getReply(id: ID): Reply
-}
 
-input MessageInput {
-  user: UserInput
-  body: String
-  createdAt: String
-}
 
 input UserInput {
   name: String
 }
+
+input MessageInput {
+  user: ID
+  body: String
+  category: String
+  subject: String
+}
+
+input ReplyInput {
+  message: ID
+  body: String
+}
+
+
+
+type Query {
+#  getUser(id: ID): User
+  getMessage(id: ID): Message
+  getMessageByReplyId(id: ID): Message
+  getMessagesByUserId(id: ID): Message
+#  getReply(id: ID): Reply
+}
+
+
 
 type Mutation {
   createUser(name: String): User
