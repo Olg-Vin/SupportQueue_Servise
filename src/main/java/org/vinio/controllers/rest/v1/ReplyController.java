@@ -11,7 +11,6 @@ import org.vinio.DTOs.Mappers.ReplyMapper;
 import org.vinio.DTOs.ReplyDTO;
 import org.vinio.Services.ReplyService;
 import org.vinio.controllers.responseDTO.ReplyResponseDTO;
-import org.vinio.repositories.ReplyRepository;
 
 import java.util.List;
 
@@ -42,14 +41,17 @@ public class ReplyController {
         Class<ReplyController> controllerClass = ReplyController.class;
 
         Link selfLink = linkTo(methodOn(controllerClass).getReplyByMessageId(id)).withSelfRel();
-        Link updateLink = linkTo(methodOn(controllerClass).updateReply(id, null)).withRel("update");
-        Link deleteLink = linkTo(methodOn(controllerClass).deleteReply(id)).withRel("delete");
+        Link updateLink = linkTo(methodOn(controllerClass).updateReply(id, null))
+                .withRel("update").withType("update");
+        Link deleteLink = linkTo(methodOn(controllerClass).deleteReply(id))
+                .withRel("delete").withType("delete");
 
         return List.of(selfLink, updateLink, deleteLink);
     }
 
     private List<Link> createActions (Long id) {
-        Link messageLink = linkTo(methodOn(MessageController.class).getMessageByReplyId(id)).withRel("message");
+        Link messageLink = linkTo(methodOn(MessageController.class).getMessageByReplyId(id))
+                .withRel("message").withType("get");
         return List.of(messageLink);
     }
 

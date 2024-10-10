@@ -1,8 +1,6 @@
 type User {
   userId: ID
   name: String
-  links: [Link]  # HATEOAS ссылки
-  actions: [Link] # HATEOAS действия
 }
 
 type Message {
@@ -10,8 +8,6 @@ type Message {
   user: String
   body: String
   createdAt: String
-  links: [Link]
-  actions: [Link]
 }
 
 type Reply {
@@ -20,13 +16,6 @@ type Reply {
   body: String
   sentAt: String
   status: String
-  links: [Link]
-  actions: [Link]
-}
-
-type Link {
-  rel: String
-  href: String
 }
 
 
@@ -53,8 +42,6 @@ type Query {
   getUser(id: ID): User
   getUsers: [User]
   getMessage(id: ID): Message
-  getMessageByReplyId(id: ID): Message
-  getMessagesByUserId(id: ID): Message
   getReply(id: ID): Reply
 }
 

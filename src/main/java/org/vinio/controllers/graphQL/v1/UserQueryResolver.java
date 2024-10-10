@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.hateoas.Link;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.vinio.DTOs.Mappers.UserMapper;
 import org.vinio.DTOs.UserDTO;
@@ -14,9 +12,6 @@ import org.vinio.Services.UserService;
 import org.vinio.controllers.responseDTO.UserResponseDTO;
 
 import java.util.List;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Log4j2
 @Controller
@@ -34,7 +29,7 @@ public class UserQueryResolver {
     @QueryMapping
     public UserResponseDTO getUser(@Argument("id") Long id) {
         UserDTO user = userService.getUser(id);
-        return userMapper.convertToResponse(user, createActions(id), createLinks(id));
+        return userMapper.convertToResponse(user);
     }
     @QueryMapping(name = "getUsers")
     public List<UserResponseDTO> getUsers() {
@@ -64,21 +59,5 @@ public class UserQueryResolver {
     public boolean deleteUser(@Argument Long id) {
         userService.deleteUser(id);
         return true;
-    }
-
-
-
-    // HATEOAS Links
-    private List<Link> createLinks(Long id) {
-        Link selfLink = linkTo(methodOn(UserQueryResolver.class).getUser(id)).withSelfRel();
-        Link updateLink = linkTo(methodOn(UserQueryResolver.class).updateUser(id, null)).withRel("update");
-        Link deleteLink = linkTo(methodOn(UserQueryResolver.class).deleteUser(id)).withRel("delete");
-        return List.of(selfLink, updateLink, deleteLink);
-    }
-
-    // HATEOAS Actions
-    private List<Link> createActions(Long id) {
-        Link messageLink = linkTo(methodOn(MessageQueryResolver.class).getMessagesByUserId(id)).withRel("messages");
-        return List.of(messageLink);
     }
 }

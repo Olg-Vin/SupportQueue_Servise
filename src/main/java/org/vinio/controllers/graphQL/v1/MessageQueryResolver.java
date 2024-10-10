@@ -30,21 +30,10 @@ public class MessageQueryResolver {
     }
 
 
-
     @QueryMapping
     public MessageResponseDTO getMessage(@Argument Long id) {
         MessageDTO message = messageService.getMessage(id);
-        return messageMapper.convertToResponse(message, createActions(id), createLinks(id));
-    }
-    @QueryMapping
-    public MessageResponseDTO getMessageByReplyId(@Argument Long id) {
-        MessageDTO message = messageService.getMessageByReplyId(id);
-        return messageMapper.convertToResponse(message, createActions(id), createLinks(id));
-    }
-    @QueryMapping
-    public MessageResponseDTO getMessagesByUserId(@Argument Long id) {
-        MessageDTO message = messageService.getMessageByReplyId(id);
-        return messageMapper.convertToResponse(message, createActions(id), createLinks(id));
+        return messageMapper.convertToResponse(message);
     }
 
 
@@ -64,21 +53,5 @@ public class MessageQueryResolver {
     public boolean deleteMessage(@Argument Long id) {
         messageService.deleteMessage(id);
         return true;
-    }
-
-
-
-    // HATEOAS Links
-    private List<Link> createLinks(Long id) {
-        Link selfLink = linkTo(methodOn(MessageQueryResolver.class).getMessage(id)).withSelfRel();
-        Link updateLink = linkTo(methodOn(MessageQueryResolver.class).updateMessage(id, null)).withRel("update");
-        Link deleteLink = linkTo(methodOn(MessageQueryResolver.class).deleteMessage(id)).withRel("delete");
-        return List.of(selfLink, updateLink, deleteLink);
-    }
-
-    // HATEOAS Actions
-    private List<Link> createActions(Long id) {
-        Link replyLink = linkTo(methodOn(ReplyQueryResolver.class).getReply(id)).withRel("reply");
-        return List.of(replyLink);
     }
 }
