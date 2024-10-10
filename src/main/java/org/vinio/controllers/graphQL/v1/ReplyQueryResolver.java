@@ -4,20 +4,19 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
-import graphql.kickstart.tools.GraphQLQueryResolver;
-import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.vinio.DTOs.Mappers.ReplyMapper;
 import org.vinio.DTOs.ReplyDTO;
 import org.vinio.Services.ReplyService;
-import org.vinio.controllers.responseDTO.ReplyQLDto;
 import org.vinio.controllers.responseDTO.ReplyResponseDTO;
+
 import java.util.List;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Log4j2
 @Component
-public class ReplyQueryResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
+public class ReplyQueryResolver {
 
     @Autowired
     private ReplyService replyService;
@@ -25,24 +24,24 @@ public class ReplyQueryResolver implements GraphQLQueryResolver, GraphQLMutation
     private ReplyMapper replyMapper;
 
     // Query to get reply by message ID
-    public ReplyQLDto getReply(Long id) {
+    public ReplyResponseDTO getReply(Long id) {
         ReplyDTO reply = replyService.getReplyByMessageId(id);
-        return replyMapper.convertToQLDto(reply, createActions(id), createLinks(id));
+        return replyMapper.convertToResponse(reply, createActions(id), createLinks(id));
     }
 
     // Mutation to create a reply
-    public ReplyQLDto createReply(Long messageId, String body) {
+    public ReplyResponseDTO createReply(Long messageId, String body) {
         ReplyDTO reply = new ReplyDTO();
         reply.setMessage(messageId);
         reply.setBody(body);
-        return replyMapper.convertToQLDto(replyService.saveReply(reply));
+        return replyMapper.convertToResponse(replyService.saveReply(reply));
     }
 
     // Mutation to update a reply
-    public ReplyQLDto updateReply(Long id, String body) {
+    public ReplyResponseDTO updateReply(Long id, String body) {
         ReplyDTO reply = replyService.getReply(id);
         reply.setBody(body);
-        return replyMapper.convertToQLDto(replyService.updateReply(id, reply));
+        return replyMapper.convertToResponse(replyService.updateReply(id, reply));
     }
 
     // Mutation to delete a reply
