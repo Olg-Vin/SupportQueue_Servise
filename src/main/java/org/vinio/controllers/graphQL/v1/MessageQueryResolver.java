@@ -1,15 +1,16 @@
 package org.vinio.controllers.graphQL.v1;
 
-import graphql.kickstart.tools.GraphQLMutationResolver;
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.hateoas.Link;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.vinio.DTOs.Mappers.MessageMapper;
 import org.vinio.DTOs.MessageDTO;
 import org.vinio.Services.MessageService;
-import org.vinio.controllers.responseDTO.MessageQLDto;
+import org.vinio.controllers.graphQL.inputs.MessageInputDTO;
 import org.vinio.controllers.responseDTO.MessageResponseDTO;
 
 import java.util.List;
@@ -18,44 +19,54 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Log4j2
-@Component
-public class MessageQueryResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
-
-    @Autowired
+@Controller
+public class MessageQueryResolver {
     private MessageService messageService;
-    @Autowired
     private MessageMapper messageMapper;
+    @Autowired
+    public MessageQueryResolver(MessageService messageService, MessageMapper messageMapper) {
+        this.messageService = messageService;
+        this.messageMapper = messageMapper;
+    }
 
-    // Query to get message by reply ID
-    public MessageQLDto getMessage(Long id) {
+
+
+    @QueryMapping
+    public MessageResponseDTO getMessage(@Argument Long id) {
         MessageDTO message = messageService.getMessage(id);
-        return messageMapper.convertToQLDto(message, createActions(id), createLinks(id));
+        return messageMapper.convertToResponse(message, createActions(id), createLinks(id));
     }
-    public MessageQLDto getMessageByReplyId(Long id) {
+    @QueryMapping
+    public MessageResponseDTO getMessageByReplyId(@Argument Long id) {
         MessageDTO message = messageService.getMessageByReplyId(id);
-        return messageMapper.convertToQLDto(message, createActions(id), createLinks(id));
+        return messageMapper.convertToResponse(message, createActions(id), createLinks(id));
     }
-    public MessageQLDto getMessagesByUserId(Long id) {
+    @QueryMapping
+    public MessageResponseDTO getMessagesByUserId(@Argument Long id) {
         MessageDTO message = messageService.getMessageByReplyId(id);
-        return messageMapper.convertToQLDto(message, createActions(id), createLinks(id));
+        return messageMapper.convertToResponse(message, createActions(id), createLinks(id));
     }
 
-    // Mutation to create a message
-    public MessageQLDto createMessage(MessageDTO messageDTO) {
-        return messageMapper.convertToQLDto(messageService.saveMessage(messageDTO));
-    }
 
-    // Mutation to update a message
-    public MessageQLDto updateMessage(Long id, MessageDTO messageDTO) {
+
+    @MutationMapping
+    public MessageResponseDTO createMessage(@Argument MessageInputDTO messageInputDTO) {
+        MessageDTO messageDTO = messageMapper.convertToDto(messageInputDTO);
+        return messageMapper.convertToResponse(messageService.saveMessage(messageDTO));
+    }
+    @MutationMapping
+    public MessageResponseDTO updateMessage(@Argument Long id, MessageInputDTO messageInputDTO) {
+        MessageDTO messageDTO = messageMapper.convertToDto(messageInputDTO);
         MessageDTO message = messageService.updateMessage(id, messageDTO);
-        return messageMapper.convertToQLDto(messageService.updateMessage(id, message));
+        return messageMapper.convertToResponse(messageService.updateMessage(id, message));
     }
-
-    // Mutation to delete a message
-    public boolean deleteMessage(Long id) {
+    @MutationMapping
+    public boolean deleteMessage(@Argument Long id) {
         messageService.deleteMessage(id);
         return true;
     }
+
+
 
     // HATEOAS Links
     private List<Link> createLinks(Long id) {

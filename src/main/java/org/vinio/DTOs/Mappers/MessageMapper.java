@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 import org.vinio.DTOs.MessageDTO;
-import org.vinio.controllers.responseDTO.MessageQLDto;
+import org.vinio.controllers.graphQL.inputs.MessageInputDTO;
+import org.vinio.controllers.responseDTO.MessageResponseDTO;
 import org.vinio.entities.MessageEntity;
 import org.vinio.repositories.MessageRepository;
 
@@ -28,18 +29,23 @@ public class MessageMapper {
         messageDTO.setUser(messageEntity.getUser().getUserId());
         return messageDTO;
     }
+    public MessageDTO convertToDto(MessageInputDTO messageInputDTO) {
+        return modelMapper.map(messageInputDTO, MessageDTO.class);
+    }
 
+// TODO в dto лежат лишь id на сущность, надо явно её привязать
     public MessageEntity convertToEntity(MessageDTO messageDTO) {
         return modelMapper.map(messageDTO, MessageEntity.class);
     }
 
-    public MessageQLDto convertToQLDto(MessageDTO messageDTO, List<Link> actions, List<Link> links) {
-        MessageQLDto messageQLDto = modelMapper.map(messageDTO, MessageQLDto.class);
-        messageQLDto.setActions(actions);  // Добавляем действия
-        messageQLDto.setLinks(links);      // Добавляем ссылки
-        return messageQLDto;
+    public MessageResponseDTO convertToResponse(MessageDTO messageDTO, List<Link> actions, List<Link> links) {
+        MessageResponseDTO messageResponseDTO = modelMapper.map(messageDTO, MessageResponseDTO.class);
+        messageResponseDTO.setActions(actions);  // Добавляем действия
+        messageResponseDTO.setLinks(links);      // Добавляем ссылки
+        return messageResponseDTO;
     }
-    public MessageQLDto convertToQLDto(MessageDTO messageDTO) {
-        return modelMapper.map(messageDTO, MessageQLDto.class);
+
+    public MessageResponseDTO convertToResponse(MessageDTO messageDTO) {
+        return modelMapper.map(messageDTO, MessageResponseDTO.class);
     }
 }

@@ -1,22 +1,16 @@
 package org.vinio.controllers.responseDTO;
 
 import org.springframework.hateoas.Link;
-import org.vinio.DTOs.MessageDTO;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
+@lombok.Data
 public class MessageResponseDTO {
-    private MessageDTO message;
+    private Long messageId;
+    private Long user;
+    private String body;
+    private Data createdAt;
     private List<Link> actions;
     private List<Link> links;
-
-    public MessageResponseDTO(MessageDTO message, List<Link> actions, List<Link> links) {
-        this.message = message;
-        this.actions = actions;
-        this.links = links;
-    }
-
-    public MessageResponseDTO(MessageDTO message) {
-        this.message = message;
-    }
 }

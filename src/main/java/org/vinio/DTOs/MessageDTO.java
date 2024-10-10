@@ -19,6 +19,4 @@ public class MessageDTO {
     private String body;
     private Date createdAt;
     private String status;
-
-//    private List<ReplyDTO> replies;
 }
