@@ -22,17 +22,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/replies")
 public class ReplyController {
-    @Autowired
-    private ReplyRepository replyRepository;
-    @Autowired
     private ReplyService replyService;
-    @Autowired
     private ReplyMapper replyMapper;
+    @Autowired
+    public ReplyController(ReplyService replyService, ReplyMapper replyMapper) {
+        this.replyService = replyService;
+        this.replyMapper = replyMapper;
+    }
+
+
 
     @GetMapping("/getReply/{id}")
     public ResponseEntity<EntityModel<ReplyResponseDTO>> getReplyByMessageId(@PathVariable("id") Long id) {
         ReplyDTO reply = replyService.getReplyByMessageId(id);
-        ReplyResponseDTO replyResponseDTO = new ReplyResponseDTO(reply, createActions(id), createLinks(id));
+        ReplyResponseDTO replyResponseDTO = replyMapper.convertToResponse(reply, createActions(id), createLinks(id));
         return new ResponseEntity<>(EntityModel.of(replyResponseDTO), HttpStatus.OK);
     }
     private List<Link> createLinks (Long id) {

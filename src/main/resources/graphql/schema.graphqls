@@ -51,10 +51,11 @@ input ReplyInput {
 
 type Query {
   getUser(id: ID): User
+  getUsers: [User]
   getMessage(id: ID): Message
   getMessageByReplyId(id: ID): Message
   getMessagesByUserId(id: ID): Message
-#  getReply(id: ID): Reply
+  getReply(id: ID): Reply
 }
 
 

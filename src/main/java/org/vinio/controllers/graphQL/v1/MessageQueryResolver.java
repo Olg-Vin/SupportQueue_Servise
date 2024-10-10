@@ -50,7 +50,7 @@ public class MessageQueryResolver {
 
 
     @MutationMapping
-    public MessageResponseDTO createMessage(@Argument MessageInputDTO messageInputDTO) {
+    public MessageResponseDTO createMessage(@Argument("message") MessageInputDTO messageInputDTO) {
         MessageDTO messageDTO = messageMapper.convertToDto(messageInputDTO);
         return messageMapper.convertToResponse(messageService.saveMessage(messageDTO));
     }

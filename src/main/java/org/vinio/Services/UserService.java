@@ -8,6 +8,8 @@ import org.vinio.DTOs.UserDTO;
 import org.vinio.entities.UserEntity;
 import org.vinio.repositories.UserRepository;
 
+import java.util.List;
+
 @Service
 @Log4j2
 public class UserService {
@@ -31,6 +33,10 @@ public class UserService {
                     log.info("User with id " + id + " not found");
                     return new RuntimeException("User with id " + id + " not found");
                 }));
+    }
+
+    public List<UserDTO> getUsers(){
+        return userRepository.findAll().stream().map(userMapper::convertToDto).toList();
     }
 
     public UserDTO updateUser(Long id, UserDTO userDTO) {
