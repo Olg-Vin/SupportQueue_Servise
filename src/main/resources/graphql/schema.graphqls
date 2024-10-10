@@ -1,0 +1,60 @@
+type User {
+  userId: ID
+  name: String
+  links: [Link]  # HATEOAS ссылки
+  actions: [Link] # HATEOAS действия
+}
+
+type Message {
+  messageId: ID
+  user: String
+  body: String
+  createdAt: String
+  links: [Link]
+  actions: [Link]
+}
+
+type Reply {
+  replyId: ID
+  message: String
+  body: String
+  sentAt: String
+  status: String
+  links: [Link]
+  actions: [Link]
+}
+
+type Link {
+  rel: String
+  href: String
+}
+
+type Query {
+  getUser(id: ID): User
+  getMessage(id: ID): Message
+  getMessageByReplyId(id: ID): Message
+  getMessagesByUserId(id: ID): Message
+  getReply(id: ID): Reply
+}
+
+input MessageInput {
+  user: UserInput
+  body: String
+  createdAt: String
+}
+
+input UserInput {
+  name: String
+}
+
+type Mutation {
+  createUser(name: String): User
+  createMessage(message: MessageInput): Message
+  createReply(messageId: ID, body: String): Reply
+  updateUser(id: ID, name: String): User
+  updateMessage(id: ID, message: MessageInput): Message
+  updateReply(id: ID, body: String): Reply
+  deleteUser(id: ID): Boolean
+  deleteMessage(id: ID): Boolean
+  deleteReply(id: ID): Boolean
+}

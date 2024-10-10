@@ -6,8 +6,10 @@ import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import org.vinio.DTOs.Mappers.ReplyMapper;
 import org.vinio.DTOs.ReplyDTO;
 import org.vinio.Services.ReplyService;
+import org.vinio.controllers.responseDTO.ReplyQLDto;
 import org.vinio.controllers.responseDTO.ReplyResponseDTO;
 import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -19,26 +21,28 @@ public class ReplyQueryResolver implements GraphQLQueryResolver, GraphQLMutation
 
     @Autowired
     private ReplyService replyService;
+    @Autowired
+    private ReplyMapper replyMapper;
 
     // Query to get reply by message ID
-    public ReplyResponseDTO getReply(Long id) {
+    public ReplyQLDto getReply(Long id) {
         ReplyDTO reply = replyService.getReplyByMessageId(id);
-        return new ReplyResponseDTO(reply, createActions(id), createLinks(id));
+        return replyMapper.convertToQLDto(reply, createActions(id), createLinks(id));
     }
 
     // Mutation to create a reply
-    public ReplyResponseDTO createReply(Long messageId, String body) {
+    public ReplyQLDto createReply(Long messageId, String body) {
         ReplyDTO reply = new ReplyDTO();
         reply.setMessage(messageId);
         reply.setBody(body);
-        return new ReplyResponseDTO(replyService.saveReply(reply));
+        return replyMapper.convertToQLDto(replyService.saveReply(reply));
     }
 
     // Mutation to update a reply
-    public ReplyResponseDTO updateReply(Long id, String body) {
+    public ReplyQLDto updateReply(Long id, String body) {
         ReplyDTO reply = replyService.getReply(id);
         reply.setBody(body);
-        return new ReplyResponseDTO(replyService.updateReply(id, reply));
+        return replyMapper.convertToQLDto(replyService.updateReply(id, reply));
     }
 
     // Mutation to delete a reply

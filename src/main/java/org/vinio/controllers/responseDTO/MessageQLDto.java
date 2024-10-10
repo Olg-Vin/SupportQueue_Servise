@@ -1,17 +1,13 @@
-package org.vinio.DTOs;
+package org.vinio.controllers.responseDTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.hateoas.Link;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class MessageDTO {
+public class MessageQLDto {
     private Long messageId;
     private Long user;
     private String category;
@@ -19,6 +15,6 @@ public class MessageDTO {
     private String body;
     private Date createdAt;
     private String status;
-
-//    private List<ReplyDTO> replies;
+    private List<Link> actions;
+    private List<Link> links;
 }

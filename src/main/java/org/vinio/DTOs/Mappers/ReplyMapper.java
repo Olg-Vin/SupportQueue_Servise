@@ -2,9 +2,13 @@ package org.vinio.DTOs.Mappers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 import org.vinio.DTOs.ReplyDTO;
+import org.vinio.controllers.responseDTO.ReplyQLDto;
 import org.vinio.entities.ReplyEntity;
+
+import java.util.List;
 
 /**
  * Класс-мапер для сущности reply
@@ -27,41 +31,14 @@ public class ReplyMapper {
     public ReplyEntity convertToEntity(ReplyDTO replyDTO) {
         return modelMapper.map(replyDTO, ReplyEntity.class);
     }
-}
 
-/*
-* @Component
-public class ReplyMapper {
-
-    @Autowired
-    private MessageRepository messageRepository;
-
-    // Преобразование ReplyEntity в ReplyDTO
-    public ReplyDTO convertToDto(ReplyEntity replyEntity) {
-        ReplyDTO replyDTO = new ReplyDTO();
-        replyDTO.setReplyId(replyEntity.getReplyId());
-        replyDTO.setMessage(replyEntity.getMessage().getMessageId());  // Извлекаем ID сообщения
-        replyDTO.setBody(replyEntity.getBody());
-        replyDTO.setSentAt(replyEntity.getSentAt());
-        replyDTO.setStatus(replyEntity.getStatus());  // Добавляем статус
-
-        return replyDTO;
+    public ReplyQLDto convertToQLDto(ReplyDTO replyDTO, List<Link> actions, List<Link> links) {
+        ReplyQLDto replyQLDto = modelMapper.map(replyDTO, ReplyQLDto.class);
+        replyQLDto.setActions(actions);  // Добавляем действия
+        replyQLDto.setLinks(links);      // Добавляем ссылки
+        return replyQLDto;
     }
-
-    // Преобразование ReplyDTO в ReplyEntity
-    public ReplyEntity convertToEntity(ReplyDTO replyDTO) {
-        ReplyEntity replyEntity = new ReplyEntity();
-
-        // Находим MessageEntity по ID
-        MessageEntity messageEntity = messageRepository.findById(replyDTO.getMessage())
-                .orElseThrow(() -> new RuntimeException("Message with id " + replyDTO.getMessage() + " not found"));
-
-        replyEntity.setMessage(messageEntity);  // Устанавливаем связь с MessageEntity
-        replyEntity.setBody(replyDTO.getBody());
-        replyEntity.setSentAt(replyDTO.getSentAt());
-        replyEntity.setStatus(replyDTO.getStatus());  // Устанавливаем статус
-
-        return replyEntity;
+    public ReplyQLDto convertToQLDto(ReplyDTO replyDTO) {
+        return modelMapper.map(replyDTO, ReplyQLDto.class);
     }
 }
-*/
