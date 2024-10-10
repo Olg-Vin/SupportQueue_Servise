@@ -44,13 +44,13 @@ public class UserQueryResolver {
 
 
     @MutationMapping
-    public UserResponseDTO createUser(String name) {
+    public UserResponseDTO createUser(@Argument("name") String name) {
         UserDTO user = new UserDTO();
         user.setName(name);
         return userMapper.convertToResponse(userService.saveUser(user));
     }
     @MutationMapping
-    public UserResponseDTO updateUser(@Argument Long id, String name) {
+    public UserResponseDTO updateUser(@Argument("id") Long id, @Argument("name") String name) {
         UserDTO userDTO = userService.getUser(id);
         if (name != null) userDTO.setName(name);
         return userMapper.convertToResponse(userService.updateUser(id, userDTO));
