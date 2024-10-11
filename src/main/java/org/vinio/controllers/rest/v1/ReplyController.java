@@ -1,4 +1,4 @@
-package org.vinio.controllers.v1;
+package org.vinio.controllers.rest.v1;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.vinio.DTOs.Mappers.ReplyMapper;
 import org.vinio.DTOs.ReplyDTO;
 import org.vinio.Services.ReplyService;
 import org.vinio.controllers.responseDTO.ReplyResponseDTO;
-import org.vinio.repositories.ReplyRepository;
 
 import java.util.List;
 
@@ -22,31 +21,35 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/replies")
 public class ReplyController {
-    @Autowired
-    private ReplyRepository replyRepository;
-    @Autowired
     private ReplyService replyService;
-    @Autowired
     private ReplyMapper replyMapper;
+    @Autowired
+    public ReplyController(ReplyService replyService, ReplyMapper replyMapper) {
+        this.replyService = replyService;
+        this.replyMapper = replyMapper;
+    }
 
     @GetMapping("/getReply/{id}")
     public ResponseEntity<EntityModel<ReplyResponseDTO>> getReplyByMessageId(@PathVariable("id") Long id) {
         ReplyDTO reply = replyService.getReplyByMessageId(id);
-        ReplyResponseDTO replyResponseDTO = new ReplyResponseDTO(reply, createActions(id), createLinks(id));
+        ReplyResponseDTO replyResponseDTO = replyMapper.convertToResponse(reply, createActions(id), createLinks(id));
         return new ResponseEntity<>(EntityModel.of(replyResponseDTO), HttpStatus.OK);
     }
     private List<Link> createLinks (Long id) {
         Class<ReplyController> controllerClass = ReplyController.class;
 
         Link selfLink = linkTo(methodOn(controllerClass).getReplyByMessageId(id)).withSelfRel();
-        Link updateLink = linkTo(methodOn(controllerClass).updateReply(id, null)).withRel("update");
-        Link deleteLink = linkTo(methodOn(controllerClass).deleteReply(id)).withRel("delete");
+        Link updateLink = linkTo(methodOn(controllerClass).updateReply(id, null))
+                .withRel("update").withType("update");
+        Link deleteLink = linkTo(methodOn(controllerClass).deleteReply(id))
+                .withRel("delete").withType("delete");
 
         return List.of(selfLink, updateLink, deleteLink);
     }
 
     private List<Link> createActions (Long id) {
-        Link messageLink = linkTo(methodOn(MessageController.class).getMessageByReplyId(id)).withRel("message");
+        Link messageLink = linkTo(methodOn(MessageController.class).getMessageByReplyId(id))
+                .withRel("message").withType("get");
         return List.of(messageLink);
     }
 

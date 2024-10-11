@@ -1,0 +1,60 @@
+type User {
+  userId: ID
+  name: String
+}
+
+type Message {
+  messageId: ID
+  user: String
+  body: String
+  createdAt: String
+}
+
+type Reply {
+  replyId: ID
+  message: String
+  body: String
+  sentAt: String
+  status: String
+}
+
+
+
+input UserInput {
+  name: String
+}
+
+input MessageInput {
+  user: ID
+  body: String
+  category: String
+  subject: String
+}
+
+input ReplyInput {
+  message: ID
+  body: String
+}
+
+
+
+type Query {
+  getUser(id: ID): User
+  getUsers: [User]
+  getMessage(id: ID): Message
+  getReply(id: ID): Reply
+}
+
+
+
+type Mutation {
+  createUser(name: String): User
+  createMessage(message: MessageInput): Message
+  createReply(messageId: ID, body: String): Reply
+  updateUser(id: ID, name: String): User
+  updateMessage(id: ID, message: MessageInput): Message
+  updateReply(id: ID, body: String): Reply
+  deleteUser(id: ID): Boolean
+  deleteMessage(id: ID): Boolean
+  deleteReply(id: ID): Boolean
+}

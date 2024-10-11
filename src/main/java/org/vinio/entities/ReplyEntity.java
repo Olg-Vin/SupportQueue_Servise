@@ -13,22 +13,17 @@ import java.util.Date;
 @Entity
 @Table(name = "reply")
 public class ReplyEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reply_id")
     private Long replyId;
-
     @OneToOne
     @JoinColumn(name = "message_id")
     private MessageEntity message;
-
-    @Column(name = "body", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "body", nullable = false)
     private String body;
-
     @Column(name = "sent_at", nullable = false)
     private Date sentAt;
-
     @Column(name = "status", nullable = false)
     private String status;
 }
