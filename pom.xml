@@ -23,35 +23,16 @@
     </properties>
 
     <dependencies>
-<!--&lt;!&ndash;         Spring Boot GraphQL support &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>com.graphql-java-kickstart</groupId>-->
-<!--            <artifactId>graphql-spring-boot-starter</artifactId>-->
-<!--            <version>14.0.0</version>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-graphql</artifactId>-->
 <!--        </dependency>-->
 
-<!--        &lt;!&ndash; GraphQL Java Tools для работы с GraphQL схемами &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.graphql-java-kickstart</groupId>-->
-<!--            <artifactId>graphql-java-tools</artifactId>-->
-<!--            <version>14.0.0</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.graphql-java</groupId>-->
-<!--            <artifactId>graphiql-spring-boot-starter</artifactId>-->
-<!--            <version>5.0.2</version>-->
-<!--        </dependency>-->
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-graphql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.graphql</groupId>
-            <artifactId>spring-graphql-test</artifactId>
-            <scope>test</scope>
+            <groupId>com.netflix.graphql.dgs</groupId>
+            <artifactId>graphql-dgs-spring-graphql-starter</artifactId>
+            <version>9.1.2</version>
         </dependency>
 
 

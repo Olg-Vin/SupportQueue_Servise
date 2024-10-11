@@ -24,15 +24,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/messages")
 public class MessageController {
-
-    @Autowired
     private MessageRepository messageRepository;
-    @Autowired
     private MessageService messageService;
-    @Autowired
     private MessageMapper messageMapper;
+    @Autowired
+    public MessageController(MessageRepository messageRepository, MessageService messageService, MessageMapper messageMapper) {
+        this.messageRepository = messageRepository;
+        this.messageService = messageService;
+        this.messageMapper = messageMapper;
+    }
 
-    //    Возвращаем entity model с ссылочками
     @GetMapping("/getMessage/{id}")
     public ResponseEntity<EntityModel<MessageDTO>> getMessageByReplyId (@PathVariable("id") Long id) {
         MessageDTO messageDTO = messageService.getMessageByReplyId(id);
@@ -48,7 +49,6 @@ public class MessageController {
     public ResponseEntity<CollectionModel<EntityModel<MessageDTO>>> getMessagesByUserId(@PathVariable("userId") Long userId) {
         List<MessageEntity> messages = messageRepository.findAll()
                 .stream().filter(mes -> mes.getUser().getUserId().equals(userId)).toList();
-// TODO переехать на messageResponseDTO
         List<EntityModel<MessageDTO>> messageDtos = messages.stream()
                 .map(messageEntity -> {
                     MessageDTO messageDto = messageMapper.convertToDto(messageEntity);
@@ -70,7 +70,6 @@ public class MessageController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    // TODO Обновление сообщения В СЛУЧАЕ ЕСЛИ СТАТУС СООТВЕТСТВУЕТ "ОЖИДАЕТ"
     @PutMapping("/update/{id}")
     public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") Long id, @RequestBody MessageDTO updatedMessage) {
         log.info("[endpoint] update message with id " + id);
@@ -78,7 +77,6 @@ public class MessageController {
         return new ResponseEntity<>(messageDTO, HttpStatus.OK);
     }
 
-    // TODO Удаление сообщения ИЗМЕНИТЬ НА СТАТУС "ОТОЗВАНО"
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteMessage(@PathVariable("id") Long id) {
         log.info("[endpoint] delete message with id " + id);

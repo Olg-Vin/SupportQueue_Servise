@@ -29,8 +29,6 @@ public class ReplyController {
         this.replyMapper = replyMapper;
     }
 
-
-
     @GetMapping("/getReply/{id}")
     public ResponseEntity<EntityModel<ReplyResponseDTO>> getReplyByMessageId(@PathVariable("id") Long id) {
         ReplyDTO reply = replyService.getReplyByMessageId(id);
