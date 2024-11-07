@@ -63,6 +63,8 @@ public class MessageController {
         return ResponseEntity.ok(CollectionModel.of(messageDtos));
     }
 
+//    TODO тут обращение к шине. Назначаем статус сообщения и его тему, сохранаем в базу
+//      всё идёт в одну очередь сообщений. Слушатель - grpc
     @PostMapping("/create")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO) {
         MessageDTO message = messageService.saveMessage(messageDTO);
