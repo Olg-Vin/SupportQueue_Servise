@@ -18,7 +18,6 @@ import org.vinio.controllers.responseDTO.UserResponseDTO;
 import java.util.List;
 
 @Log4j2
-//@Controller
 @DgsComponent
 public class UserQueryResolver {
     private UserService userService;
@@ -29,42 +28,29 @@ public class UserQueryResolver {
         this.userMapper = userMapper;
     }
 
-
-
-//    @QueryMapping
     @DgsQuery
     public UserResponseDTO getUser(@InputArgument Long id) {
         UserDTO user = userService.getUser(id);
         return userMapper.convertToResponse(user);
     }
-//    @QueryMapping(name = "getUsers")
     @DgsQuery
     public List<UserResponseDTO> getUsers() {
         List<UserDTO> user = userService.getUsers();
-        for (int i = 0; i < user.size(); i++) {
-            System.out.println(user.get(i));
-        }
         return user.stream().map(u -> userMapper.convertToResponse(u)).toList();
     }
 
-
-
-
-//    @MutationMapping
     @DgsMutation
     public UserResponseDTO createUser(@InputArgument String name) {
         UserDTO user = new UserDTO();
         user.setName(name);
         return userMapper.convertToResponse(userService.saveUser(user));
     }
-//    @MutationMapping
     @DgsMutation
     public UserResponseDTO updateUser(@InputArgument Long id, @InputArgument String name) {
         UserDTO userDTO = userService.getUser(id);
         if (name != null) userDTO.setName(name);
         return userMapper.convertToResponse(userService.updateUser(id, userDTO));
     }
-//    @MutationMapping
     @DgsMutation
     public boolean deleteUser(@InputArgument Long id) {
         userService.deleteUser(id);
