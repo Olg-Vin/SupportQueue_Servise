@@ -35,7 +35,7 @@ public class UserService {
                 }));
     }
 
-    public List<UserDTO> getUsers(){
+    public List<UserDTO> getAllUsers(){
         return userRepository.findAll().stream().map(userMapper::convertToDto).toList();
     }
 

@@ -52,11 +52,7 @@ public class ReplyController {
                 .withRel("message").withType("get");
         return List.of(messageLink);
     }
-//      TODO ЭТО НЕОБХОДИМО ВЫВЕСТИ В СЛУШАТЕЛЬ - NOTIFIER.
-//       Он будет обращаться к main сервису и выполнять эти действия:
-//    TODO Сам является слушателем - получает сообщение от grpc и "прикрепляется" к сообщению из бд.
-//     Так же должен менять статус сообщения в бд на "получен ответ".
-//     И отправлять сообщение об этом в очередь для сервиса Notifier
+
     @PostMapping
     public ResponseEntity<ReplyDTO> createReply(@RequestBody ReplyDTO reply) {
         ReplyDTO replyDTO = replyService.saveReply(reply);

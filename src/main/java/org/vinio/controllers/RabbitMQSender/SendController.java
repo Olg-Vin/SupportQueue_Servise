@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/send")
 public class SendController {
     private final RabbitTemplate rabbitTemplate;
-    private static final String EXCHANGE_NAME = "testExchange";
+    private static final String EXCHANGE_NAME = "defaultExchange";
 
     public SendController(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -29,7 +29,7 @@ public class SendController {
             case "firstQueue" -> "my.key";
             case "GRPCQueue" -> "grpc.key";
             case "AuditQueue" -> "audit.key";
-            case "NotificationQueue" -> "notification.key";
+//            case "NotificationQueue" -> "notification.key";
             default -> null;
         };
     }

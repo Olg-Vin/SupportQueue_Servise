@@ -24,13 +24,15 @@ public class MessageEntity {
     private String category;
     @Column(name = "subject", nullable = false)
     private String subject;
-    @Column(name = "body", columnDefinition = "TEXT",
-            nullable = false)
+    @Column(name = "priority")
+    private int priority;
+    @Column(name = "body", columnDefinition = "TEXT", nullable = false)
     private String body;
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
     @Column(name = "status", nullable = false)
     private String status;
+
     @OneToOne(mappedBy = "message", cascade = CascadeType.ALL)
     private ReplyEntity reply;
 }

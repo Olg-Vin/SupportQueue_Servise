@@ -16,6 +16,7 @@ public class MessageDTO {
     private Long user;
     private String category;
     private String subject;
+    private int priority;
     private String body;
     private Date createdAt;
     private String status;
