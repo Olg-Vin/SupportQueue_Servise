@@ -28,16 +28,16 @@ public class DataInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Создаем тестовых пользователей
-        UserEntity user1 = new UserEntity(null, "John Doe", null);
-        UserEntity user2 = new UserEntity(null, "Jane Smith", null);
+        UserEntity user1 = new UserEntity(null, "John Doe", "null@null", null);
+        UserEntity user2 = new UserEntity(null, "Jane Smith", "null@null", null);
 
         userRepository.saveAll(List.of(user1, user2));
 
         Date date = new Date();
 
         // Создаем тестовые сообщения для пользователей
-        MessageEntity message1 = new MessageEntity(null, user1, "Technical Issue", "Can't log in", "I'm having trouble logging in to my account.", date, "New", null);
-        MessageEntity message2 = new MessageEntity(null, user2, "Suggestion", "Add new feature", "I suggest adding a dark mode feature.", date, "New", null);
+        MessageEntity message1 = new MessageEntity(null, user1, "Technical Issue", "Can't log in", 2, "I'm having trouble logging in to my account.", date, "New", null);
+        MessageEntity message2 = new MessageEntity(null, user2, "Suggestion", "Add new feature", 2, "I suggest adding a dark mode feature.", date, "New", null);
 
         messageRepository.saveAll(List.of(message1, message2));
 

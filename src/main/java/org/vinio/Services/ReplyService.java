@@ -41,7 +41,7 @@ public class ReplyService {
                     return new RuntimeException("Reply with id " + id + " not found");
                 });
         existingReply.setBody(replyDTO.getBody());
-        existingReply.setSentAt(replyDTO.getSentAt());
+        existingReply.setCreatedAt(replyDTO.getCreateAt());
         existingReply.setStatus(replyDTO.getStatus());
         ReplyEntity updatedReply = replyRepository.save(existingReply);
         return replyMapper.convertToDto(updatedReply);

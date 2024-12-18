@@ -19,8 +19,9 @@ public class UserEntity {
     private Long userId;
     @Column(name = "name", nullable = false)
     private String name;
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "email", nullable = false)
+    private String email;
+    @OneToMany(mappedBy = "user")
     private List<MessageEntity> messages;
 }
 

@@ -13,9 +13,10 @@ import java.util.Date;
 @AllArgsConstructor
 public class MessageDTO {
     private Long messageId;
-    private Long user;
+    private Long userId;
     private String category;
     private String subject;
+    private int priority;
     private String body;
     private Date createdAt;
     private String status;

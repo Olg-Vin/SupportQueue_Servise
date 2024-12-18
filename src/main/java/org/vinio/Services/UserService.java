@@ -35,7 +35,7 @@ public class UserService {
                 }));
     }
 
-    public List<UserDTO> getUsers(){
+    public List<UserDTO> getAllUsers(){
         return userRepository.findAll().stream().map(userMapper::convertToDto).toList();
     }
 
@@ -47,6 +47,7 @@ public class UserService {
                     return new RuntimeException("User with id " + id + " not found");
                 });
         existingUser.setName(userDTO.getName());
+        existingUser.setEmail(userDTO.getEmail());
         UserEntity updatedUser = userRepository.save(existingUser);
         return userMapper.convertToDto(updatedUser);
     }
