@@ -23,8 +23,18 @@ public class ReplyEntity {
     @Column(name = "body", nullable = false)
     private String body;
     @Column(name = "sent_at", nullable = false)
-    private Date sentAt;
+    private Date createdAt;
     @Column(name = "status", nullable = false)
     private String status;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = new Date(); // Заполнение поля createdAt текущей датой
+        }
+        if (status == null) {
+            status = "NEW"; // Заполнение поля status значением "NEW", или любым другим значением по умолчанию
+        }
+    }
 }
 

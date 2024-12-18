@@ -4,15 +4,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.Link;
-
-import java.util.List;
 import org.vinio.dtos.response.UserResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserResponseDTO extends UserResponse {
-    @JsonProperty("actions")
-    private List<Link> actions;
-    @JsonProperty("links")
-    private List<Link> links;
+    @JsonProperty("_actions")
+    private List<Link> actions = new ArrayList<>();
+
+    public void addActions(Link... links) {
+        actions.addAll(List.of(links));
+    }
+
+    public List<Link> getActions() {
+        return actions;
+    }
 }

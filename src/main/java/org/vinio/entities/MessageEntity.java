@@ -28,13 +28,19 @@ public class MessageEntity {
     private int priority;
     @Column(name = "body", columnDefinition = "TEXT", nullable = false)
     private String body;
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Date createdAt;
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private String status;
 
     @OneToOne(mappedBy = "message", cascade = CascadeType.ALL)
     private ReplyEntity reply;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = new Date();
+        status = "NEW";
+    }
 }
 
 

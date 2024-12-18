@@ -2,25 +2,25 @@ package org.vinio.controllers.responseDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.Link;
+import org.vinio.dtos.response.ReplyResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ReplyResponseDTO {
-    @JsonProperty("replyId")
-    private Long replyId;
-    @JsonProperty("message")
-    private String message;
-    @JsonProperty("body")
-    private String body;
-    @JsonProperty("sentAt")
-    private String sentAt;
-    @JsonProperty("status")
-    private String status;
-    @JsonProperty("links")
-    private List<Link> links;
-    @JsonProperty("actions")
-    private List<Link> actions;
+@EqualsAndHashCode(callSuper = true)
+public class ReplyResponseDTO extends ReplyResponse {
+    @JsonProperty("_actions")
+    private List<Link> actions = new ArrayList<>();
+
+    public void addActions(Link... links) {
+        actions.addAll(List.of(links));
+    }
+
+    public List<Link> getActions() {
+        return actions;
+    }
 }
 

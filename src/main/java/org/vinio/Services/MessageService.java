@@ -7,6 +7,7 @@ import org.vinio.DTOs.Mappers.MessageMapper;
 import org.vinio.DTOs.MessageDTO;
 import org.vinio.entities.MessageEntity;
 import org.vinio.repositories.MessageRepository;
+import org.vinio.repositories.UserRepository;
 
 import java.util.List;
 
@@ -14,17 +15,22 @@ import java.util.List;
 @Log4j2
 public class MessageService {
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
     private final MessageMapper messageMapper;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, MessageMapper messageMapper) {
+    public MessageService(MessageRepository messageRepository, UserRepository userRepository, MessageMapper messageMapper) {
         this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
         this.messageMapper = messageMapper;
     }
 
     public MessageDTO saveMessage(MessageDTO messageDTO) {
-        log.info("Save new message");
-        MessageEntity message = messageRepository.save(messageMapper.convertToEntity(messageDTO));
+        log.info("Save new message: " + messageDTO);
+        MessageEntity message = messageMapper.convertToEntity(messageDTO);
+        System.out.println("сообщение сконвертировано в сущность: " + message);
+        message.setUser(userRepository.findById(messageDTO.getUserId()).orElseThrow());
+        message = messageRepository.save(message);
         return messageMapper.convertToDto(message);
     }
 
